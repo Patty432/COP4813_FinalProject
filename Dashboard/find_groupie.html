@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Groupies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #87ceeb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* navigation bar: header */
+        .header {
+            background: rgba(240, 240, 240, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #4a90e2;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .btn-secondary:hover {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .profile-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .groupies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .groupie-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .groupie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .groupie-info {
+            flex: 1;
+        }
+
+        .groupie-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .groupie-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .groupie-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            min-width: 140px;
+        }
+
+        .member-count {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .current-members {
+            color: #4a90e2;
+        }
+
+        .max-members {
+            color: #999;
+        }
+
+        .join-button {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .join-button:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .header-buttons {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .groupies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .groupie-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .groupie-actions {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER ATTRIBUTES -->
+    <header class="header">
+        <!--LOGO-->
+        <a href="index.html" class="logo" id="logoLink">
+            <div class="logo-icon">SG</div>
+            <span>StudyGroupies</span>
+        </a>
+
+        <!--HEADER BUTTONS-->
+        <div class="header-buttons">
+            <button class="btn btn-secondary" onclick="findGroupie()">Find Groupie</button>
+            <button class="btn btn-primary" onclick="createGroup()">Create Groupie</button>
+        </div>
+
+        <div class="profile-icon" onclick="goToProfile()">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">Available Study Groupies</h1>
+        
+        <div class="groupies-grid">
+            <div class="groupies-grid" id="groupiesGrid">
+            <!-- Groupie cards will be inserted here dynamically through script-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Header functions
+        function createGroup() {
+            window.location.href = '../Dashboard/create_groupie.html';
+        }
+
+        function findGroupie() {
+            window.location.href = '../Dashboard/find_groupie.html';
+        }
+
+        function goToProfile() {
+            window.location.href = '../Dashboard/profile.html';
+        }
+    </script>
+
+    <script>
+        // Function to find the groupies created in the table groupies
+        async function fetchGroupies() {
+            try {
+                const response = await fetch('findGroupies_data.php');
+                if (!response.ok) {
+                    throw new Error('Failed to load groupies');
+                }
+                const groupies = await response.json();
+
+                const grid = document.getElementById('groupiesGrid');
+                grid.innerHTML = ''; 
+
+                groupies.forEach(groupie => {
+                    // Create card container
+                    const card = document.createElement('div');
+                    card.className = 'groupie-card';
+
+                    // Left info
+                    const info = document.createElement('div');
+                    info.className = 'groupie-info';
+
+                    const title = document.createElement('h3');
+                    title.className = 'groupie-title';
+                    title.textContent = `${groupie.subject} | ${groupie.title}`;
+                    info.appendChild(title);
+
+                    const desc = document.createElement('p');
+                    desc.className = 'groupie-description';
+                    desc.textContent = groupie.description;
+                    info.appendChild(desc);
+
+                    // Right info
+                    const actions = document.createElement('div');
+                    actions.className = 'groupie-actions';
+
+                    const memberCount = document.createElement('div');
+                    memberCount.className = 'member-count';
+
+                    const currentMembersSpan = document.createElement('span');
+                    currentMembersSpan.className = 'current-members';
+                    currentMembersSpan.textContent = groupie.current_members;
+
+                    const separator = document.createTextNode(' / ');
+
+                    const maxMembersSpan = document.createElement('span');
+                    maxMembersSpan.className = 'max-members';
+                    maxMembersSpan.textContent = groupie.max_members;
+
+                    memberCount.appendChild(currentMembersSpan);
+                    memberCount.appendChild(separator);
+                    memberCount.appendChild(maxMembersSpan);
+
+                    // Join button
+                    const joinButton = document.createElement('button');
+                    joinButton.className = 'join-button';
+                    joinButton.textContent = 'Join Groupie';
+
+                    // Disable button if full
+                    if (groupie.current_members >= groupie.max_members) {
+                        joinButton.disabled = true;
+                        joinButton.textContent = 'Full';
+                        joinButton.style.background = '#ccc';
+                        joinButton.style.cursor = 'not-allowed';
+                    }
+
+                    joinButton.addEventListener('click', async () => {
+                        try {
+                            const res = await fetch('join_groupie.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ groupie_id: groupie.id })
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                                currentMembersSpan.textContent = parseInt(currentMembersSpan.textContent) + 1;
+                                joinButton.textContent = 'Joined!';
+                                joinButton.disabled = true;
+                                joinButton.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                                joinButton.style.cursor = 'default';
+                                alert(`Successfully joined: ${groupie.title}`);
+                            } else {
+                                alert(data.error || 'Failed to join the groupie.');
+                            }
+                        } catch (err) {
+                            alert('Error connecting to server.');
+                        }
+                    });
+
+                    actions.appendChild(memberCount);
+                    actions.appendChild(joinButton);
+
+                    card.appendChild(info);
+                    card.appendChild(actions);
+
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                alert('Failed to load study groupies.');
+            }
+        }
+
+        window.addEventListener('load', fetchGroupies);
+    </script>
+
+</body>
+</html>

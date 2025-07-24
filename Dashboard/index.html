@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #87ceeb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* navigation bar: header */
+        .header {
+            background: rgba(240, 240, 240, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #4a90e2;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .btn-secondary:hover {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .profile-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 2rem;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            color: #4a90e2;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .group-list {
+            list-style: none;
+        }
+
+        .group-item {
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 4px solid var(--group-color, #4a90e2);
+        }
+
+        .group-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.2);
+        }
+
+        .group-item.selected {
+            background: rgba(74, 144, 226, 0.1);
+            transform: translateX(5px);
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .group-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .color-picker-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-picker-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .group-members {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Color Picker Modal */
+        .color-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .color-modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            border-color: #333;
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.2);
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            flex: 1;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            margin: 1rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #357abd;
+            transform: scale(1.05);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .calendar-day {
+            background: white;
+            padding: 1rem;
+            min-height: 100px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .calendar-day.other-month {
+            background: #f5f5f5;
+            color: #ccc;
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+        }
+
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .event {
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--event-color, #4a90e2);
+        }
+
+        .event:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }   
+            
+            .header-buttons {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+
+        .leave-group-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #e74c3c; /* red */
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            line-height: 25px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .leave-group-icon:hover {
+            background-color: #c0392b;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- HEADER ATTRIBUTES -->
+    <header class="header">
+        <!--LOGO-->
+        <a href="index.html" class="logo" id="logoLink">
+            <div class="logo-icon">SG</div>
+            <span>StudyGroupies</span>
+        </a>
+
+        <!--HEADER BUTTONS-->
+        <div class="header-buttons">
+            <button class="btn btn-secondary" onclick="findGroupie()">Find Groupie</button>
+            <button class="btn btn-primary" onclick="createGroup()">Create Groupie</button>
+        </div>
+
+        <div class="profile-icon" onclick="goToProfile()">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>My Groupies</h3>
+            <ul class="group-list" id="groupList">
+                <!-- Groups will be populated through script dinamically-->
+            </ul>
+        </aside>
+
+        <!-- Calendar Section -->
+        <main class="calendar-section">
+            <div class="calendar-header">
+                <h2 class="calendar-title" id="calendarTitle">December 2024</h2>
+                <div class="calendar-nav">
+                    <button class="nav-btn" onclick="previousMonth()">&lt;</button>
+                    <button class="nav-btn" onclick="nextMonth()">&gt;</button>
+                </div>
+            </div>
+            
+            <div class="calendar-controls">
+                <button class="btn btn-primary" onclick="addMeeting()">Add Meeting</button>
+                <button class="btn btn-secondary" onclick="viewToday()">Today</button>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar days will be generated by script-->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Adding Meetings -->
+    <div id="meetingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMeetingModal()">&times;</span>
+            <h3>Add New Meeting</h3>
+            <form id="meetingForm">
+                <div class="form-group">
+                    <label for="meetingGroup">Study Group:</label>
+                    <select id="meetingGroup" required>
+                        <option value="">Select a group...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="meetingTitle">Title:</label>
+                    <input type="text" id="meetingTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDate">Date:</label>
+                    <input type="date" id="meetingDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingTime">Time:</label>
+                    <input type="time" id="meetingTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDescription">Description:</label>
+                    <textarea id="meetingDescription" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Meeting</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Color Picker Modal -->
+    <div id="colorModal" class="color-modal">
+        <div class="color-modal-content">
+            <span class="close" onclick="closeColorModal()">&times;</span>
+            <h3>Choose Group Color</h3>
+            <div class="color-grid" id="colorGrid">
+                <!-- Color options will be populated by script-->
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-primary" onclick="saveGroupColor()">Save Color</button>
+                <button class="btn btn-secondary" onclick="closeColorModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentMonth = 11; // December (0-indexed)
+        let currentYear = 2024;
+        let selectedGroup = null;
+        let currentColorGroup = null;
+        let selectedColor = null;
+
+        // Study groupies belonging to the current user
+        let studyGroups = {}; 
+
+        let meetings = {
+            '2024-12-15': [{title: 'Math Study Session', time: '14:00', group: 'Math Study Group'}],
+            '2024-12-18': [{title: 'Physics Lab Meeting', time: '10:00', group: 'Physics Lab'}],
+            '2024-12-22': [{title: 'Chemistry Review', time: '16:00', group: 'Chemistry Research'}]
+        };
+
+        // Color palette for groups
+        const colorPalette = [
+            '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#e67e22',
+            '#1abc9c', '#34495e', '#f1c40f', '#95a5a6', '#e91e63', '#ff5722',
+            '#607d8b', '#795548', '#ff9800', '#4caf50', '#2196f3', '#673ab7'
+        ];
+
+        // Initialize application
+        function initApp() {
+            populateGroups();
+            populateGroupSelect();
+            populateColorGrid();
+            generateCalendar();
+        }
+
+        // Populate sidebar groups
+        async function populateGroups() {
+            const groupList = document.getElementById('groupList');
+            groupList.innerHTML = '';
+
+            try {
+                const response = await fetch('getEnrolledGroupies.php', { credentials: 'include' });
+                const groupies = await response.json();
+
+                if (groupies.error) {
+                    groupList.innerHTML = `<li style="color:red;">${groupies.error}</li>`;
+                    return;
+                }
+
+                if (groupies.length === 0) {
+                    groupList.innerHTML = `<li>No groups joined yet.</li>`;
+                    return;
+                }
+
+            groupies.forEach(group => {
+                const groupItem = document.createElement('li');
+                groupItem.className = 'group-item';
+                const groupColor = '#4a90e2';
+
+                groupItem.style.setProperty('--group-color', groupColor);
+
+                groupItem.innerHTML = `
+                    <div class="group-header">
+                        <div class="group-name">${group.title}</div>
+                    </div>
+                    <div class="group-members">${group.current_members} members</div>
+                    <div class="leave-group-icon" title="Leave group">&#128465;</div> <!-- trash bin icon -->
+                `;
+
+                groupItem.addEventListener('click', () => {
+                    selectGroup(group.title, groupItem);
+                });
+
+                // Prevent click on trash from selecting group, and handle leave group
+                groupItem.querySelector('.leave-group-icon').addEventListener('click', async (e) => {
+                    e.stopPropagation();
+
+                    const confirmLeave = confirm(`Are you sure you want to leave the group "${group.title}"?`);
+                    if (!confirmLeave) return;
+
+                    try {
+                        const response = await fetch('leaveGroupie.php', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ groupId: group.id }),
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            alert(`You have left the group "${group.title}".`);
+                            // Refresh group list after leaving
+                            populateGroups();
+                            populateGroupSelect();
+                            generateCalendar();
+                        } else {
+                            alert('Failed to leave the group. Please try again.');
+                        }
+                    } catch (error) {
+                        alert('Error communicating with the server.');
+                        console.error(error);
+                    }
+                });
+
+                groupList.appendChild(groupItem);
+            });
+
+            } catch (error) {
+                groupList.innerHTML = `<li style="color:red;">Failed to load groups.</li>`;
+                console.error('Error loading groups:', error);
+            }
+        }
+
+
+        // Populate group select in meeting form
+        function populateGroupSelect() {
+            const groupSelect = document.getElementById('meetingGroup');
+            groupSelect.innerHTML = '<option value="">Select a group...</option>';
+            
+            Object.keys(studyGroups).forEach(groupName => {
+                const option = document.createElement('option');
+                option.value = groupName;
+                option.textContent = groupName;
+                groupSelect.appendChild(option);
+            });
+        }
+
+        // Populate color grid
+        function populateColorGrid() {
+            const colorGrid = document.getElementById('colorGrid');
+            colorGrid.innerHTML = '';
+            
+            colorPalette.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                colorOption.style.backgroundColor = color;
+                colorOption.addEventListener('click', () => selectColor(color, colorOption));
+                colorGrid.appendChild(colorOption);
+            });
+        }
+
+        // Color picker functions
+        function openColorPicker(groupName, event) {
+            event.stopPropagation();
+            currentColorGroup = groupName;
+            selectedColor = studyGroups[groupName].color;
+            
+            // Highlight current color
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.style.backgroundColor === hexToRgb(selectedColor)) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('colorModal').style.display = 'block';
+        }
+
+        function selectColor(color, element) {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedColor = color;
+        }
+
+        function saveGroupColor() {
+            if (currentColorGroup && selectedColor) {
+                studyGroups[currentColorGroup].color = selectedColor;
+                populateGroups();
+                generateCalendar(); 
+                closeColorModal();
+            }
+        }
+
+        function closeColorModal() {
+            document.getElementById('colorModal').style.display = 'none';
+            currentColorGroup = null;
+            selectedColor = null;
+        }
+
+        // Helper function to convert hex to rgb for comparison
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (!result) return null;
+            const r = parseInt(result[1], 16);
+            const g = parseInt(result[2], 16);
+            const b = parseInt(result[3], 16);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Select group function
+        function selectGroup(groupName, element) {
+            selectedGroup = groupName;
+            document.querySelectorAll('.group-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            console.log('Selected group:', groupName);
+        }
+
+        // Calendar functions
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('calendarTitle').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Clear existing calendar
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.textContent = day;
+                dayHeader.style.background = '#4a90e2';
+                dayHeader.style.color = 'white';
+                dayHeader.style.fontWeight = 'bold';
+                dayHeader.style.textAlign = 'center';
+                dayHeader.style.padding = '1rem';
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                // Check if day is current day
+                if (currentYear === today.getFullYear() && 
+                    currentMonth === today.getMonth() && 
+                    day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                
+                dayElement.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="day-events" id="events-${currentYear}-${currentMonth + 1}-${day}"></div>
+                `;
+                
+                // Add click event for adding meetings
+                dayElement.addEventListener('click', () => {
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    document.getElementById('meetingDate').value = dateStr;
+                    addMeeting();
+                });
+                
+                calendarGrid.appendChild(dayElement);
+                
+                // Add existing meetings
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                if (meetings[dateKey]) {
+                    const eventsContainer = dayElement.querySelector('.day-events');
+                    meetings[dateKey].forEach(meeting => {
+                        const eventElement = document.createElement('div');
+                        eventElement.className = 'event';
+                        eventElement.textContent = meeting.title;
+                        
+                        // Set event color based on group
+                        if (meeting.group && studyGroups[meeting.group]) {
+                            eventElement.style.backgroundColor = studyGroups[meeting.group].color;
+                        }
+                        
+                        eventElement.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            deleteMeeting(dateKey, meeting);
+                        });
+                        eventsContainer.appendChild(eventElement);
+                    });
+                }
+            }
+        }
+
+        // Navigation functions
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+
+        function viewToday() {
+            const today = new Date();
+            currentMonth = today.getMonth();
+            currentYear = today.getFullYear();
+            generateCalendar();
+        }
+
+        // Meeting functions
+        function addMeeting() {
+            document.getElementById('meetingModal').style.display = 'block';
+        }
+
+        function closeMeetingModal() {
+            document.getElementById('meetingModal').style.display = 'none';
+            document.getElementById('meetingForm').reset();
+        }
+
+        function deleteMeeting(dateKey, meeting) {
+            if (confirm(`Delete "${meeting.title}"?`)) {
+                meetings[dateKey] = meetings[dateKey].filter(m => m !== meeting);
+                if (meetings[dateKey].length === 0) {
+                    delete meetings[dateKey];
+                }
+                generateCalendar();
+            }
+        }
+
+        // Form submission
+        document.getElementById('meetingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const group = document.getElementById('meetingGroup').value;
+            const title = document.getElementById('meetingTitle').value;
+            const date = document.getElementById('meetingDate').value;
+            const time = document.getElementById('meetingTime').value;
+            const description = document.getElementById('meetingDescription').value;
+            
+            if (!meetings[date]) {
+                meetings[date] = [];
+            }
+            
+            meetings[date].push({
+                title: title,
+                time: time,
+                description: description,
+                group: group
+            });
+            
+            closeMeetingModal();
+            generateCalendar();
+        });
+
+        // Header functions
+        function createGroup() {
+            window.location.href = '../Dashboard/create_groupie.html';
+        }
+
+        function findGroupie() {
+            window.location.href = '../Dashboard/find_groupie.html';
+        }
+
+        function goToProfile() {
+            window.location.href = '../Dashboard/profile.html';
+        }
+
+        // Initialize the application
+        window.addEventListener('load', function() {
+            initApp();
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            const meetingModal = document.getElementById('meetingModal');
+            const colorModal = document.getElementById('colorModal');
+            
+            if (e.target === meetingModal) {
+                closeMeetingModal();
+            }
+            
+            if (e.target === colorModal) {
+                closeColorModal();
+            }
+        });
+    </script>
+</body>
+</html>

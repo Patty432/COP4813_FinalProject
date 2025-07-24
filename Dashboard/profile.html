@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #87ceeb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header styles (same as main page) */
+        .header {
+            background: rgba(240, 240, 240, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #4a90e2;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .sign-out-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #dc4c64, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .sign-out-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 76, 100, 0.4);
+        }
+
+        /* Profile container */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 400px;
+        }
+
+        /* Profile picture section */
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #4a90e2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-picture-container:hover .edit-overlay {
+            opacity: 1;
+        }
+
+        .edit-icon {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* User information */
+        .user-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-email {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-major {
+            font-size: 1.1rem;
+            color: #4a90e2;
+            font-weight: 600;
+        }
+
+        /* Modal for picture selection */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .picture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .picture-option {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .picture-option:hover {
+            transform: scale(1.1);
+            border-color: #4a90e2;
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .picture-option.selected {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .btn-secondary:hover {
+            background: #4a90e2;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-card {
+                min-width: auto;
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+            }
+
+            .edit-overlay {
+                width: 120px;
+                height: 120px;
+            }
+
+            .user-name {
+                font-size: 1.5rem;
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo" onclick="goHome()">
+            <div class="logo-icon">SG</div>
+            <span>StudyGroupies</span>
+        </a>
+        <div class="header-buttons">
+            <a href="#" class="sign-out-btn" onclick="signOut()">Sign Out</a>
+        </div>
+    </header>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-picture-container" onclick="openPictureModal()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNGE5MGUyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz48L3N2Zz4=" 
+                     alt="Profile Picture" 
+                     class="profile-picture" 
+                     id="profileImage">
+                <div class="edit-overlay">
+                    <div class="edit-icon">✏️</div>
+                </div>
+            </div>
+            
+            <div class="user-name" id="userName">John Doe</div>
+            <div class="user-email" id="userEmail">john.doe@university.edu</div>
+            <div class="user-major" id="userMajor">Computer Science</div>
+        </div>
+    </div>
+
+    <!-- Picture Selection Modal -->
+    <div id="pictureModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePictureModal()">&times;</span>
+            <h3 class="modal-title">Choose Your Profile Picture</h3>
+            
+            <div class="picture-grid" id="pictureGrid">
+                <!-- Default avatar options will be generated here -->
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="savePicture()">Save</button>
+                <button class="btn btn-secondary" onclick="closePictureModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User data 
+        let userData = {
+            name: "John Doe",
+            email: "john.doe@university.edu",
+            major: "Computer Science",
+            profilePicture: 0 // Index of selected picture
+        };
+
+        // Default profile picture options (using SVG avatars with different colors)
+        const defaultPictures = [
+            // Default user icon (blue)
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNGE5MGUyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Green avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNDVhMDQ5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Purple avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOGI1Y2Y2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Orange avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmY4MzMzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Pink avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZWM0ODk5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Teal avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMTRiOGE2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Red avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZGM0YzY0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg==",
+            
+            // Yellow avatar
+            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmJiZjI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEyIiBmaWxsPSIjZjBmOGZmIi8+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00cy0xLjc5LTQtNC00LTQgMS43OS00IDQgMS43OSA0IDQgNHptMCAyYy0yLjY3IDAtOCAxLjM0LTggNHYyaDE2di0yYzAtMi42Ni01LjMzLTQtOC00eiIvPjwvc3ZnPg=="
+        ];
+
+        let selectedPictureIndex = userData.profilePicture;
+
+        // Initialize page
+        function initProfile() {
+            loadUserData();
+            generatePictureOptions();
+        }
+
+        // Load user data
+        function loadUserData() {
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userMajor').textContent = userData.major;
+            document.getElementById('profileImage').src = defaultPictures[userData.profilePicture];
+        }
+
+        // Generate picture options in modal
+        function generatePictureOptions() {
+            const pictureGrid = document.getElementById('pictureGrid');
+            pictureGrid.innerHTML = '';
+
+            defaultPictures.forEach((picture, index) => {
+                const img = document.createElement('img');
+                img.src = picture;
+                img.className = 'picture-option';
+                img.onclick = () => selectPicture(index);
+                
+                if (index === selectedPictureIndex) {
+                    img.classList.add('selected');
+                }
+                
+                pictureGrid.appendChild(img);
+            });
+        }
+
+        // Select picture
+        function selectPicture(index) {
+            selectedPictureIndex = index;
+            document.querySelectorAll('.picture-option').forEach((img, i) => {
+                if (i === index) {
+                    img.classList.add('selected');
+                } else {
+                    img.classList.remove('selected');
+                }
+            });
+        }
+
+        // Modal functions
+        function openPictureModal() {
+            selectedPictureIndex = userData.profilePicture;
+            generatePictureOptions();
+            document.getElementById('pictureModal').style.display = 'block';
+        }
+
+        function closePictureModal() {
+            document.getElementById('pictureModal').style.display = 'none';
+        }
+
+        function savePicture() {
+            userData.profilePicture = selectedPictureIndex;
+            document.getElementById('profileImage').src = defaultPictures[selectedPictureIndex];
+            
+            console.log('Profile picture updated to index:', selectedPictureIndex);
+            
+            closePictureModal();
+        }
+
+        // Navigation
+        function goHome() {
+            window.history.back();
+        }
+
+        // Sign out function
+        function signOut() {
+            // Clear any stored user data or session
+            if (confirm('Are you sure you want to sign out?')) {
+                // Clear session data
+                sessionStorage.clear();
+                
+                // Redirect to login page
+                window.location.href = '../Login/login.html';
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initProfile);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('pictureModal');
+            if (e.target === modal) {
+                closePictureModal();
+            }
+        });
+    </script>
+
+    <!--script to handle the current user information-->
+    <script>
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('profile_data.php');
+                if (!response.ok) {
+                    throw new Error('Not authenticated or error fetching data');
+                }
+                const user = await response.json();
+
+                // Update page content dynamically
+                const userName = `${user.fname} ${user.lname}`;
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userMajor').textContent = user.major;
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                // Redirect to login page if not authenticated
+                window.location.href = '../Login/login.html';
+            }
+        }
+
+        // Call on page load
+        window.addEventListener('load', loadUserProfile);
+    </script>
+
+</body>
+</html>
