@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #87ceeb 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Header/Logo Section */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Register Container */
+        .register-container {
+            background: rgba(240, 240, 240, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out, float 6s ease-in-out infinite 2s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-title {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            font-size: 1rem;
+            background: rgba(248, 250, 252, 0.8);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            border-color: #4a90e2;
+            background: white;
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-group input[type="text"]:hover,
+        .form-group input[type="password"]:hover {
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Login Link */
+        .login-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .login-section p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .login-link {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .login-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            transition: width 0.3s ease;
+        }
+
+        .login-link:hover::after {
+            width: 100%;
+        }
+
+        .login-link:hover {
+            color: #357abd;
+            transform: translateY(-1px);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .register-container {
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .register-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .form-group input[type="text"],
+            .form-group input[type="password"] {
+                padding: 12px 15px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">SG</div>
+            Study Groupies
+        </a>
+    </div>
+
+    <!-- Register Container -->
+    <div class="register-container">
+        <h3 class="register-title">Create Account</h3>
+        
+        <!-- Register Form -->
+        <form action="/studygroupies/Login/process_register.php" method="post" id="registerForm">
+            <div class="form-group">
+                <label for="firstName_id">First Name</label>
+                <input type="text" id="firstName_id" name="firstName" required />
+            </div>
+
+            <div class="form-group">
+                <label for="lastName_id">Last Name</label>
+                <input type="text" id="lastName_id" name="lastName" required />
+            </div>
+
+            <div class="form-group">
+                <label for="major_id">Major</label>
+                <input type="text" id="major_id" name="major" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email_id">Email: </label>
+                <input type="text" id="email_id" name="email" />
+            </div>
+
+            <div class="form-group">
+                <label for="password_id">Password</label>
+                <input type="password" id="password_id" name="password" required />
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Login Section -->
+        <div class="login-section">
+            <p>
+                Already have an account? 
+                <a href="login.html" class="login-link">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Interactive functionality
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = 'Creating Account...';
+
+            // Remove loading state after form submission 
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = 'Create Account';
+            }, 2000);
+        });
+
+        // Add focus animations
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

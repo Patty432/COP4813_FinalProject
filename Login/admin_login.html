@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff8c00 0%, #ff6600 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Header/Logo Section */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Admin badge */
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        /* Login Container */
+        .login-container {
+            background: rgba(245, 245, 245, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-title {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff8c00, #ff6600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            font-size: 1rem;
+            background: rgba(248, 250, 252, 0.8);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            border-color: #ff8c00;
+            background: white;
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-group input[type="text"]:hover,
+        .form-group input[type="password"]:hover {
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff8c00, #ff6600);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Back to Student Login Section */
+        .back-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 140, 0, 0.2);
+        }
+
+        .back-section p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            color: #ff8c00;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .back-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(45deg, #ff8c00, #ff6600);
+            transition: width 0.3s ease;
+        }
+
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        .back-link:hover {
+            color: #ff6600;
+            transform: translateY(-1px);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-container {
+            animation: slideUp 0.6s ease-out, float 6s ease-in-out infinite 2s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .login-container {
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .form-group input[type="text"],
+            .form-group input[type="password"] {
+                padding: 12px 15px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">SG</div>
+            Study Groupies
+        </a>
+        <div class="admin-badge">ADMIN ACCESS</div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div id="error-msg" style="color: red; font-weight: bold; text-align: center; margin-bottom: 1rem; display: none;">
+            Incorrect username or password.
+        </div>
+
+        <h3 class="login-title">Administrator Login</h3>
+        
+        <!-- Admin Login Form -->
+        <form action="../Login/process_admin_login.php" method="post" id="adminLoginForm">
+            <div class="form-group">
+                <label for="admin_username_id">Username</label>
+                <input type="text" id="admin_username_id" name="admin_username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="admin_password_id">Password</label>
+                <input type="password" id="admin_password_id" name="admin_password" required>
+            </div>
+
+            <button type="submit" class="submit-btn" id="adminSubmitBtn">
+                Admin Sign In
+            </button>
+        </form>
+
+        <!-- Back to Student Login Section -->
+        <div class="back-section">
+            <p>Not an administrator? 
+                <a href="../Login/login.html" class="back-link">Back to Student Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Interactive functionality
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('adminSubmitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = 'Signing In...';
+            
+            // Remove loading state after form submission
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = 'Admin Sign In';
+            }, 2000);
+        });
+
+        // Add focus animations
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+
+    <script>
+    // Check if URL has ?error=1
+    const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === '1') {
+            // Show the error message div
+            document.getElementById('error-msg').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
